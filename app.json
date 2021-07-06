@@ -1,0 +1,70 @@
+{
+    "name": "Telegram Files Rename Bot",
+    "description": "A Very Simple Telegram Files Rename Bot by @AbirHasan2005",
+    "keywords": [
+        "telegram",
+        "files",
+        "rename",
+        "bot"
+    ],
+    "repository": "https://github.com/AbirHasan2005/Rename-Bot",
+    "website": "https://abirhasan.wtf",
+    "success_url": "https://t.me/AH_RenameBot",
+    "env": {
+        "API_ID": {
+            "description": "Get this value from my.telegram.org or @TeleORG_Bot"
+        },
+        "API_HASH": {
+            "description": "Get this value from my.telegram.org or @TeleORG_Bot"
+        },
+        "BOT_TOKEN": {
+            "description": "Get this from @BotFather XD"
+        },
+        "BOT_OWNER": {
+            "description": "Bot Owner UserID"
+        },
+        "MONGODB_URI": {
+            "description": "MongoDB Database URI for Saving UserID for Broadcast. Tutorial: https://www.youtube.com/watch?v=aXlF80Cn7iU"
+        },
+        "UPDATES_CHANNEL": {
+            "description": "ID of a Channel which you want to do Force Sub to use the bot. Example: -100123456789",
+            "required": false
+        },
+        "LOG_CHANNEL": {
+            "description": "Logs Channel ID for some Tracking XD. Example: -100123456789"
+        },
+        "DOWNLOAD_PATH": {
+            "description": "Files download path. You can keep default. Should not end with '/'",
+            "required": false,
+            "value": "./downloads"
+        },
+        "SLEEP_TIME": {
+            "description": "Time Gap Between Process. Keep Default.",
+            "value": "5"
+        },
+        "ONE_PROCESS_ONLY": {
+            "description": "Allow Only One Rename Process at a Time by User.",
+            "required": false
+        },
+        "BROADCAST_AS_COPY": {
+            "description": "Broadcast as Copy or with Forward Tag. Value should be True/False."
+        },
+        "SESSION_NAME": {
+            "description": "Any Bot Session Name."
+        }
+    },
+    "buildpacks": [ 
+        {
+            "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+        }, 
+        { 
+            "url": "heroku/python"
+        }
+    ],
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    }
+}

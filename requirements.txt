@@ -1,0 +1,8 @@
+pyrogram
+TgCrypto
+dnspython
+aiofiles
+motor
+Pillow
+hachoir
+pyromod
