@@ -19,6 +19,8 @@ start - Start Bot
 settings - Show Settings Panel
 delete_thumbnail - Delete Custom Thumbnail.
 delete_caption - Delete Caption.
+broadcast - Broadcast Message. (Admin Only)
+status - Show Users Count in DB. (Admin Only)
 ```
 
 ### Support Group

@@ -2,6 +2,8 @@
 
 import os
 import time
+import psutil
+import shutil
 import string
 import asyncio
 from pyromod import listen
@@ -16,9 +18,10 @@ from helpers.database.access_db import db
 from helpers.forcesub import ForceSub
 from helpers.check_gap import CheckTimeGap
 from helpers.setup_prefix import SetupPrefix
+from helpers.broadcast import broadcast_handler
 from helpers.uploader import UploadFile, UploadVideo, UploadAudio
 from helpers.database.add_user import AddUserToDatabase
-from helpers.display_progress import progress_for_pyrogram
+from helpers.display_progress import progress_for_pyrogram, humanbytes
 
 RenameBot = Client(
     session_name=Config.SESSION_NAME,
@@ -222,6 +225,28 @@ async def delete_caption(bot: Client, event: Message):
         return
     await db.set_caption(event.from_user.id, caption=None)
     await event.reply_text("Custom Caption Removed Successfully!")
+
+
+@RenameBot.on_message(filters.private & filters.command("broadcast") & filters.user(Config.BOT_OWNER) & filters.reply)
+async def _broadcast(_, event: Message):
+    await broadcast_handler(event)
+
+
+@RenameBot.on_message(filters.private & filters.command("status") & filters.user(Config.BOT_OWNER))
+async def show_status_count(_, event: Message):
+    total, used, free = shutil.disk_usage(".")
+    total = humanbytes(total)
+    used = humanbytes(used)
+    free = humanbytes(free)
+    cpu_usage = psutil.cpu_percent()
+    ram_usage = psutil.virtual_memory().percent
+    disk_usage = psutil.disk_usage('/').percent
+    total_users = await db.total_users_count()
+    await event.reply_text(
+        text=f"**Total Disk Space:** {total} \n**Used Space:** {used}({disk_usage}%) \n**Free Space:** {free} \n**CPU Usage:** {cpu_usage}% \n**RAM Usage:** {ram_usage}%\n\n**Total Users in DB:** `{total_users}`",
+        parse_mode="Markdown",
+        quote=True
+    )
 
 
 @RenameBot.on_message(filters.private & filters.command("settings"))

@@ -6,3 +6,4 @@ motor
 Pillow
 hachoir
 pyromod
+psutil
