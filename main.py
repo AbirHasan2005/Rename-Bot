@@ -214,6 +214,16 @@ async def show_thumb_handler(bot: Client, event: Message):
         await event.reply_text("No Thumbnail Found in Database!\nSend a Thumbnail to Save.", quote=True)
 
 
+@RenameBot.on_message(filters.private & filters.command(["delete_caption", "del_caption", "remove_caption", "rm_caption"]) & ~filters.edited)
+async def delete_caption(bot: Client, event: Message):
+    await AddUserToDatabase(bot, event)
+    FSub = await ForceSub(bot, event)
+    if FSub == 400:
+        return
+    await db.set_caption(event.from_user.id, caption=None)
+    await event.reply_text("Custom Caption Removed Successfully!")
+
+
 @RenameBot.on_message(filters.private & filters.command("settings"))
 async def settings_handler(bot: Client, event: Message):
     await AddUserToDatabase(bot, event)
