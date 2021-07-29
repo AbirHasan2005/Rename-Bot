@@ -4,7 +4,7 @@ from configs import Config
 GAP = {}
 
 
-async def CheckTimeGap(user_id: int, rm_gap: bool = None):
+async def CheckTimeGap(user_id, rm_gap: bool = None):
     """A Function for checking user time gap!
 
     :parameter user_id: Telegram User ID.
