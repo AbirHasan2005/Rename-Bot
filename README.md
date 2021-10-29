@@ -34,6 +34,9 @@ Press Below Button to Deploy!
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/AbirHasan2005/Rename-Bot)
 
+#### Thanks to [subinps](https://github.com/subinps) for helping
+#### Inspired from [@HK_Rename_Bot](https://t.me/HK_Rename_Bot)
+
 ### Follow on:
 <p align="left">
 <a href="https://github.com/AbirHasan2005"><img src="https://img.shields.io/badge/GitHub-Follow%20on%20GitHub-inactive.svg?logo=github"></a>
