@@ -32,8 +32,6 @@ async def set_thumbnail(c: Client, m: Message):
 
 @Client.on_message(filters.command("delete_thumbnail") & ~filters.edited)
 async def delete_thumbnail(c: Client, m: Message):
-    if (not m.reply_to_message) or (not m.reply_to_message.photo):
-        return await m.reply_text("Reply to any image to save in as custom thumbnail!")
     if not m.from_user:
         return await m.reply_text("I don't know about you sar :(")
     await add_user_to_database(c, m)
