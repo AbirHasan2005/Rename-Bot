@@ -2,14 +2,12 @@
 
 import shutil
 from os import (
-    PathLike,
     remove
 )
-from typing import Union
 from configs import Config
 
 
-async def rm_dir(root: Union[PathLike[str], str] = f"{Config.DOWNLOAD_DIR}"):
+async def rm_dir(root: str = f"{Config.DOWNLOAD_DIR}"):
     """
     Delete a Folder.
 
@@ -22,7 +20,7 @@ async def rm_dir(root: Union[PathLike[str], str] = f"{Config.DOWNLOAD_DIR}"):
         Config.LOGGER.getLogger(__name__).error(e)
 
 
-async def rm_file(file_path: PathLike):
+async def rm_file(file_path: str):
     """
     Delete a File.
 
