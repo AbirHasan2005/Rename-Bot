@@ -2,6 +2,7 @@
 
 import datetime
 import motor.motor_asyncio
+from configs import Config
 
 
 class Database:
@@ -67,3 +68,6 @@ class Database:
     async def get_caption(self, id):
         user = await self.col.find_one({'id': int(id)})
         return user.get('caption', None)
+
+
+db = Database(Config.MONGODB_URI, "Rename-Bot")

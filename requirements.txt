@@ -1,9 +1,8 @@
-pyrogram
+Pyrogram
 TgCrypto
+pyromod
+python-dotenv
 dnspython
-aiofiles
 motor
 Pillow
 hachoir
-pyromod
-psutil
