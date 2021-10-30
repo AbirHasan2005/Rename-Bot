@@ -3,6 +3,7 @@
 from configs import Config
 from bot.client import Client
 from pyrogram.types import Message
+from bot.core.file_info import get_media_file_name
 
 
 async def handle_not_big(
@@ -17,7 +18,7 @@ async def handle_not_big(
     reply_markup = m.reply_to_message.reply_markup \
         if m.reply_to_message.reply_markup \
         else None
-    caption = m.reply_to_message.caption.markdown \
+    caption = m.reply_to_message.caption.markdown.replace(str(get_media_file_name(m.reply_to_message)), file_name) \
         if m.reply_to_message.caption \
         else "**Developer: @AbirHasan2005**"
     parse_mode = "Markdown"

@@ -229,7 +229,7 @@ async def rename_handler(c: Client, m: Message):
         reply_markup = m.reply_to_message.reply_markup \
             if m.reply_to_message.reply_markup \
             else None
-        caption = m.reply_to_message.caption.markdown \
+        caption = m.reply_to_message.caption.markdown.replace(str(get_media_file_name(m.reply_to_message)), file_name) \
             if m.reply_to_message.caption \
             else "**Developer: @AbirHasan2005**"
         parse_mode = "Markdown"
