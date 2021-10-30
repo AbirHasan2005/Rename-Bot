@@ -6,3 +6,6 @@ dnspython
 motor
 Pillow
 hachoir
+mutagen
+psutil
+aiofiles

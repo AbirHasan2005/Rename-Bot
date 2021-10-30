@@ -1,7 +1,7 @@
 # (c) @AbirHasan2005
 
 from dotenv import load_dotenv
-from bot.client import Client
+import bot.client
 
 load_dotenv()
-bot = Client()
+bot = bot.client.Client()

@@ -7,6 +7,7 @@
 # Some Parts Copied from:
 # https://github.com/pyrogram/pyrogram/blob/master/pyrogram/methods/advanced/save_file.py
 # https://github.com/pyrogram/pyrogram/blob/master/pyrogram/methods/messages/send_video.py
+# https://github.com/pyrogram/pyrogram/blob/master/pyrogram/methods/messages/send_audio.py
 # https://github.com/pyrogram/pyrogram/blob/master/pyrogram/methods/messages/send_document.py
 
 import os

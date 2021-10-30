@@ -7,6 +7,7 @@ This is a very simple Telegram Files Rename Bot by [@AbirHasan2005](https://t.me
 - Very User-Friendly.
 - [MongoDB](https://mongodb.com) Based Database.
 - Time Gap Support.
+- Broadcast Message to Users in Database.
 - Use Default Video Thumbnail after Rename. It will not Generate New if Video already has thumbnail.
 - Heroku Deployable :)
 
@@ -18,6 +19,8 @@ rename - Rename file
 set_thumbnail - Set Custom Thumbnail
 show_thumbnail - Show Custom Thumbnail
 delete_thumbnail - Delete Custom Thumbnail
+broadcast - Broadcast Message. (Admin Only)
+status - Show Users Count in DB. (Admin Only)
 ```
 
 ### Support Group

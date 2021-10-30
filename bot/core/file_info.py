@@ -58,3 +58,11 @@ def get_file_type(message: Message):
         return "video"
     if message.audio:
         return "audio"
+
+
+def get_file_attr(message: Message):
+    media = message.audio or \
+            message.video or \
+            message.document
+
+    return media

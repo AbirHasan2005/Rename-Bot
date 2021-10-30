@@ -2,7 +2,9 @@
 
 import time
 import traceback
-from bot import Client
+from bot.client import (
+    Client
+)
 from pyrogram import (
     filters,
     raw,
@@ -14,7 +16,8 @@ from bot.core.file_info import (
     get_media_file_id,
     get_media_file_size,
     get_media_file_name,
-    get_file_type
+    get_file_type,
+    get_file_attr
 )
 from configs import Config
 from bot.core.fixes import fix_thumbnail
@@ -22,6 +25,7 @@ from bot.core.display import progress_for_pyrogram
 from bot.core.utils.rm import rm_dir
 from bot.core.db.database import db
 from bot.core.db.add import add_user_to_database
+from bot.core.handlers.not_big import handle_not_big
 from bot.core.handlers.time_gap import check_time_gap
 
 
@@ -55,6 +59,17 @@ async def rename_handler(c: Client, m: Message):
     else:
         file_name = user_input_msg.text[:255]
     await editable.edit("Please Wait ...")
+    is_big = get_media_file_size(m.reply_to_message) > (10 * 1024 * 1024)
+    if not is_big:
+        _default_thumb_ = await db.get_thumbnail(m.from_user.id)
+        if not _default_thumb_:
+            _m_attr = get_file_attr(m.reply_to_message)
+            _default_thumb_ = _m_attr.thumbs[0].file_id \
+                if (_m_attr and _m_attr.thumbs) \
+                else None
+        await handle_not_big(c, m, get_media_file_id(m.reply_to_message), file_name,
+                             editable, get_file_type(m.reply_to_message), _default_thumb_)
+        return
     file_type = get_file_type(m.reply_to_message)
     _c_file_id = FileId.decode(get_media_file_id(m.reply_to_message))
     try:
@@ -72,7 +87,8 @@ async def rename_handler(c: Client, m: Message):
             )
         )
         if not file_id:
-            return await editable.edit("Failed to Rename!")
+            return await editable.edit("Failed to Rename!\n\n"
+                                       "Maybe your file corrupted :(")
 
         await editable.edit("Sending to you ...")
 

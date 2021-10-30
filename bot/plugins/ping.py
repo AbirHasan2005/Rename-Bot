@@ -1,6 +1,6 @@
 # (c) @AbirHasan2005
 
-from bot import Client
+from bot.client import Client
 from pyrogram import filters
 from pyrogram.types import Message
 from bot.core.db.add import add_user_to_database

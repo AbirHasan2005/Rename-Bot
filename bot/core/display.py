@@ -3,7 +3,7 @@
 import math
 import time
 import asyncio
-from bot import bot
+import bot
 from typing import Union
 from pyrogram.types import Message, CallbackQuery
 from pyrogram.errors import FloodWait
@@ -59,7 +59,7 @@ async def progress_for_pyrogram(
                     parse_mode='markdown'
                 )
             except AttributeError:
-                await bot.edit_inline_caption(
+                await bot.bot.edit_inline_caption(
                     inline_message_id=message.inline_message_id,
                     caption="**{}**\n\n {}".format(
                         ud_type,

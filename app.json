@@ -30,6 +30,14 @@
             "description": "Files download path. You can keep default. Should not end with '/'",
             "required": false,
             "value": "./downloads"
+        },
+        "BROADCAST_AS_COPY": {
+            "description": "Broadcast as Copy or with Forward Tag. Value should be True/False.",
+            "required": false,
+            "value": "False"
+        },
+        "OWNER_ID": {
+            "description": "Bot Owner UserID"
         }
     },
     "buildpacks": [ 
