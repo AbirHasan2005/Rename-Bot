@@ -2,7 +2,6 @@
 
 import os
 import time
-import traceback
 from typing import (
     Union,
     Optional,
@@ -21,7 +20,9 @@ from pyrogram.errors import (
     MessageNotModified
 )
 from configs import Config
+from bot.core.utils.rm import rm_file
 from bot.core.fixes import fix_thumbnail
+from bot.core.db.database import db
 from bot.core.display import progress_for_pyrogram
 from bot.core.utils.audio_info import get_audio_info
 from bot.core.utils.video_info import get_video_info
@@ -78,16 +79,22 @@ class NormalRename(Scaffold):
                 ))
 
                 await editable.edit("Processing Thumbnail ...")
+                upload_as_doc = await db.get_upload_as_doc(chat_id)
+                has_db_thumb = await db.get_thumbnail(chat_id)
                 width = kwargs.get("width", 0)
                 height = kwargs.get("height", 0)
-                if (not width) or (not height):
-                    height, width = await get_thumbnail_info(thumb)
-                resize_thumb = kwargs.get("resize_thumb", False)
-                if resize_thumb:
-                    thumb = await fix_thumbnail(thumb, height)
-                _thumb = await self.save_file(thumb)
+                if has_db_thumb or (not upload_as_doc):
+                    if (not width) or (not height):
+                        height, width = await get_thumbnail_info(thumb)
+                    resize_thumb = kwargs.get("resize_thumb", False)
+                    if resize_thumb:
+                        thumb = await fix_thumbnail(thumb, height)
+                    _thumb = await self.save_file(thumb)
+                    await rm_file(thumb)
+                else:
+                    _thumb = None
 
-                if upload_mode == "document":
+                if (upload_as_doc is True) or (upload_mode == "document"):
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(dl_file_path) or "application/zip",
                         file=file,
@@ -96,7 +103,7 @@ class NormalRename(Scaffold):
                             raw.types.DocumentAttributeFilename(file_name=file_name or os.path.basename(dl_file_path))
                         ]
                     )
-                elif upload_mode == "video":
+                elif (upload_as_doc is False) and (upload_mode == "video"):
                     duration = kwargs.get("duration", 0)
                     if not duration:
                         await editable.edit("Fetching Video Duration ...")
@@ -115,7 +122,7 @@ class NormalRename(Scaffold):
                             raw.types.DocumentAttributeFilename(file_name=file_name or os.path.basename(dl_file_path))
                         ]
                     )
-                elif upload_mode == "audio":
+                elif (upload_as_doc is False) and (upload_mode == "audio"):
 
                     duration = kwargs.get("duration", 0)
                     if not duration:
@@ -126,7 +133,7 @@ class NormalRename(Scaffold):
                     media = raw.types.InputMediaUploadedDocument(
                         mime_type=self.guess_mime_type(dl_file_path) or "audio/mpeg",
                         file=file,
-                        thumb=thumb,
+                        thumb=_thumb,
                         attributes=[
                             raw.types.DocumentAttributeAudio(
                                 duration=duration,
@@ -139,6 +146,7 @@ class NormalRename(Scaffold):
 
                 else:
                     await editable.edit("I can't rename this type of media!")
+                    await rm_file(dl_file_path)
                     return None, "InvalidMedia"
 
                 while True:
@@ -159,8 +167,10 @@ class NormalRename(Scaffold):
                         await self.save_file(dl_file_path, file_id=file.id, file_part=e.x)
                     else:
                         await editable.edit("Uploaded Successfully!")
+                        await rm_file(dl_file_path)
                         return True, False
             except StopTransmission:
+                await rm_file(dl_file_path)
                 return None, "StopTransmission"
         except Exception as err:
             Config.LOGGER.getLogger(__name__).error(err)

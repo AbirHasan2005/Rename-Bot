@@ -16,8 +16,8 @@ class Database:
         return dict(
             id=id,
             join_date=datetime.date.today().isoformat(),
-            prefix=None,
-            upload_as_doc=True,
+            apply_caption=True,
+            upload_as_doc=False,
             thumbnail=None,
             caption=None
         )
@@ -41,12 +41,12 @@ class Database:
     async def delete_user(self, user_id):
         await self.col.delete_many({'id': int(user_id)})
 
-    async def set_prefix(self, id, prefix):
-        await self.col.update_one({'id': id}, {'$set': {'prefix': prefix}})
+    async def set_apply_caption(self, id, apply_caption):
+        await self.col.update_one({'id': id}, {'$set': {'apply_caption': apply_caption}})
 
-    async def get_prefix(self, id):
+    async def get_apply_caption(self, id):
         user = await self.col.find_one({'id': int(id)})
-        return user.get('prefix', None)
+        return user.get('apply_caption', True)
 
     async def set_upload_as_doc(self, id, upload_as_doc):
         await self.col.update_one({'id': id}, {'$set': {'upload_as_doc': upload_as_doc}})
@@ -68,6 +68,10 @@ class Database:
     async def get_caption(self, id):
         user = await self.col.find_one({'id': int(id)})
         return user.get('caption', None)
+
+    async def get_user_data(self, id) -> dict:
+        user = await self.col.find_one({'id': int(id)})
+        return user if user else None
 
 
 db = Database(Config.MONGODB_URI, "Rename-Bot")

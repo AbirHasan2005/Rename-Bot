@@ -1,9 +1,7 @@
 # (c) @AbirHasan2005
 
 import shutil
-from os import (
-    remove
-)
+import aiofiles.os
 from configs import Config
 
 
@@ -26,4 +24,7 @@ async def rm_file(file_path: str):
 
     :param file_path: Pass File Path
     """
-    remove(file_path)
+    try:
+        await aiofiles.os.remove(file_path)
+    except:
+        pass

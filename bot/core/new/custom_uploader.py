@@ -425,8 +425,7 @@ class CustomUploader(Scaffold):
                 return raw.types.InputFileBig(
                     id=file_id_,
                     parts=file_total_parts,
-                    name=file_name,
-
+                    name=file_name
                 )
             else:
                 return raw.types.InputFile(

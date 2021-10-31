@@ -3,7 +3,7 @@
 from configs import Config
 from bot.client import Client
 from pyrogram.types import Message
-from bot.core.file_info import get_media_file_name
+from bot.core.db.database import db
 
 
 async def handle_not_big(
@@ -18,15 +18,24 @@ async def handle_not_big(
     reply_markup = m.reply_to_message.reply_markup \
         if m.reply_to_message.reply_markup \
         else None
-    caption = m.reply_to_message.caption.markdown.replace(str(get_media_file_name(m.reply_to_message)), file_name) \
-        if m.reply_to_message.caption \
-        else "**Developer: @AbirHasan2005**"
+    _db_caption = await db.get_caption(m.from_user.id)
+    apply_caption = await db.get_apply_caption(m.from_user.id)
+    if (not _db_caption) and (apply_caption is True):
+        caption = m.reply_to_message.caption.markdown \
+            if m.reply_to_message.caption \
+            else "**Developer: @AbirHasan2005**"
+    elif _db_caption and (apply_caption is True):
+        caption = _db_caption
+    else:
+        caption = ""
     parse_mode = "Markdown"
     if thumb:
         _thumb = await c.download_media(thumb, f"{Config.DOWNLOAD_DIR}/{m.from_user.id}/{m.message_id}/")
     else:
         _thumb = None
-    if upload_mode == "video":
+    upload_as_doc = await db.get_upload_as_doc(m.from_user.id)
+
+    if (upload_as_doc is False) and (upload_mode == "video"):
         performer = None
         title = None
         duration = m.reply_to_message.video.duration \
@@ -38,7 +47,7 @@ async def handle_not_big(
         height = m.reply_to_message.video.height \
             if m.reply_to_message.video.height \
             else 0
-    elif upload_mode == "audio":
+    elif (upload_as_doc is False) and (upload_mode == "audio"):
         width = None
         height = None
         duration = m.reply_to_message.audio.duration \
