@@ -1,6 +1,7 @@
 # (c) @AbirHasan2005
 
 import time
+import mimetypes
 import traceback
 from bot.client import (
     Client
@@ -38,8 +39,8 @@ async def rename_handler(c: Client, m: Message):
                                quote=True)
             return
     await add_user_to_database(c, m)
-    if (not m.reply_to_message) or (not m.reply_to_message.media):
-        return await m.reply_text("Reply to any media to rename it!", quote=True)
+    if (not m.reply_to_message) or (not m.reply_to_message.media) or (not get_file_attr(m.reply_to_message)):
+        return await m.reply_text("Reply to any document or video or audio file to rename it!", quote=True)
 
     # Proceed
     editable = await m.reply_text("Now send me new file name!", quote=True)
@@ -50,8 +51,12 @@ async def rename_handler(c: Client, m: Message):
     if user_input_msg.text and user_input_msg.text.startswith("/"):
         await editable.edit("Process Cancelled!")
         return await user_input_msg.continue_propagation()
-    if user_input_msg.text.rsplit(".", 1)[-1].lower() != get_media_file_name(m.reply_to_message).rsplit(".", 1)[-1].lower():
-        file_name = user_input_msg.text.rsplit(".", 1)[0][:255] + "." + get_media_file_name(m.reply_to_message).rsplit(".", 1)[-1].lower()
+    _raw_file_name = get_media_file_name(m.reply_to_message)
+    if not _raw_file_name:
+        _file_ext = mimetypes.guess_extension(get_file_attr(m.reply_to_message).mime_type)
+        _raw_file_name = "UnknownFileName" + _file_ext
+    if user_input_msg.text.rsplit(".", 1)[-1].lower() != _raw_file_name.rsplit(".", 1)[-1].lower():
+        file_name = user_input_msg.text.rsplit(".", 1)[0][:255] + "." + _raw_file_name.rsplit(".", 1)[-1].lower()
     else:
         file_name = user_input_msg.text[:255]
     await editable.edit("Please Wait ...")
