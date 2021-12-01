@@ -33,7 +33,11 @@ class SendFloodedMessage:
             disable_notification: Optional[bool] = None,
             reply_to_message_id: Optional[int] = None,
             schedule_date: Optional[int] = None,
-            reply_markup: Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, None] = None
+            reply_markup: Union[
+                InlineKeyboardMarkup,
+                ReplyKeyboardMarkup,
+                ReplyKeyboardRemove,
+                ForceReply, None] = None
     ) -> Message:
         """
         Try sending Text Message. But if FloodWait raises, than sleep x time and continue.
