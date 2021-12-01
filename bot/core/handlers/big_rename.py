@@ -135,7 +135,7 @@ async def handle_big_rename(
         _db_thumb = await db.get_thumbnail(m.from_user.id)
         thumbnail_file_id = _db_thumb \
             if _db_thumb \
-            else (_f_thumb.file_id
+            else (_f_thumb
                   if _f_thumb
                   else None)
         if thumbnail_file_id:
