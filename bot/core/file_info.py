@@ -66,3 +66,13 @@ def get_file_attr(message: Message):
             message.document
 
     return media
+
+
+def get_thumb_file_id(message: Message):
+    media = message.audio or \
+            message.video or \
+            message.document
+    if media and media.thumbs:
+        return media.thumbs[0].file_id
+    else:
+        return None
