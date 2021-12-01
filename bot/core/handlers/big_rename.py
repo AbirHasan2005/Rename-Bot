@@ -14,6 +14,7 @@ from configs import Config
 from bot.core.utils.rm import rm_dir
 from bot.core.fixes import fix_thumbnail
 from bot.core.db.database import db
+from bot.core.file_info import get_thumb_file_id
 
 
 async def handle_big_rename(
@@ -130,9 +131,7 @@ async def handle_big_rename(
         )
 
     elif (upload_as_doc is True) or (file_type == "document"):
-        _f_thumb = m.reply_to_message.document.thumbs[0] \
-            if m.reply_to_message.document.thumbs \
-            else None
+        _f_thumb = get_thumb_file_id(m.reply_to_message)
         _db_thumb = await db.get_thumbnail(m.from_user.id)
         thumbnail_file_id = _db_thumb \
             if _db_thumb \
