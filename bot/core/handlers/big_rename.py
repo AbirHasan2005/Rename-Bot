@@ -14,7 +14,10 @@ from configs import Config
 from bot.core.utils.rm import rm_dir
 from bot.core.fixes import fix_thumbnail
 from bot.core.db.database import db
-from bot.core.file_info import get_thumb_file_id
+from bot.core.file_info import (
+    get_thumb_file_id,
+    get_media_mime_type
+)
 
 
 async def handle_big_rename(
@@ -147,14 +150,12 @@ async def handle_big_rename(
             thumb = await c.save_file(path=thumb_path)
         else:
             thumb = None
-        mime_type = m.reply_to_message.document.mime_type \
-            if m.reply_to_message.document.mime_type \
-            else "application/zip"
+        mime_type = get_media_mime_type(m.reply_to_message) or "application/zip"
 
         media = raw.types.InputMediaUploadedDocument(
             mime_type=mime_type,
             file=file_id,
-            force_file=None,
+            force_file=True,
             thumb=thumb,
             attributes=[
                 raw.types.DocumentAttributeFilename(file_name=file_name)

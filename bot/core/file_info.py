@@ -14,7 +14,10 @@ def get_media_file_name(message: Message):
             message.video or \
             message.animation
 
-    return media.file_name
+    if media and media.file_name:
+        return media.file_name
+    else:
+        return None
 
 
 def get_media_file_size(message: Message):
@@ -31,7 +34,25 @@ def get_media_file_size(message: Message):
             message.voice or \
             message.video_note
 
-    return media.file_size
+    if media and media.file_size:
+        return media.file_size
+    else:
+        return None
+
+
+def get_media_mime_type(message: Message):
+    """
+    Pass Message object of audio or document or video to get mime_type
+    """
+
+    media = message.audio or \
+            message.document or \
+            message.video
+    
+    if media and media.mime_type:
+        return media.mime_type
+    else:
+        return None
 
 
 def get_media_file_id(message: Message):
@@ -48,7 +69,10 @@ def get_media_file_id(message: Message):
             message.voice or \
             message.video_note
 
-    return media.file_id
+    if media and media.file_id:
+        return media.file_id
+    else:
+        return None
 
 
 def get_file_type(message: Message):
@@ -61,6 +85,11 @@ def get_file_type(message: Message):
 
 
 def get_file_attr(message: Message):
+
+    """
+    Combine audio or video or document
+    """
+
     media = message.audio or \
             message.video or \
             message.document
