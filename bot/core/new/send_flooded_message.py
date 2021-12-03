@@ -6,9 +6,6 @@ from typing import (
     Union,
     Optional
 )
-from userbot import (
-    Config
-)
 from pyrogram.types import (
     Message,
     MessageEntity,
