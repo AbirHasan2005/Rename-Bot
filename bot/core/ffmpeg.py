@@ -3,6 +3,7 @@
 import os
 import time
 import asyncio
+from typing import Optional
 
 
 async def take_screen_shot(video_file, output_directory, ttl) -> Optional[str]:
