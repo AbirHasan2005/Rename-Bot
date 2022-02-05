@@ -35,7 +35,7 @@ class SendFloodedMessage:
                 ReplyKeyboardMarkup,
                 ReplyKeyboardRemove,
                 ForceReply, None] = None
-    ) -> Message:
+    ) -> Optional[Message]:
         """
         Try sending Text Message. But if FloodWait raises, than sleep x time and continue.
 
@@ -66,6 +66,8 @@ class SendFloodedMessage:
             )
             return __SEND
         except FloodWait as e:
+            if e.x > 120:
+                return None
             print(f"Sleeping for {e.x}s")
             await asyncio.sleep(e.x)
             return await self.send_flooded_message(
