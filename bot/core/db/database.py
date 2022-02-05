@@ -6,7 +6,6 @@ from configs import Config
 
 
 class Database:
-
     def __init__(self, uri, database_name):
         self._client = motor.motor_asyncio.AsyncIOMotorClient(uri)
         self.db = self._client[database_name]
@@ -28,15 +27,14 @@ class Database:
 
     async def is_user_exist(self, id):
         user = await self.col.find_one({'id': int(id)})
-        return True if user else False
+        return bool(user)
 
     async def total_users_count(self):
         count = await self.col.count_documents({})
         return count
 
     async def get_all_users(self):
-        all_users = self.col.find({})
-        return all_users
+        return self.col.find({})
 
     async def delete_user(self, user_id):
         await self.col.delete_many({'id': int(user_id)})
@@ -71,7 +69,7 @@ class Database:
 
     async def get_user_data(self, id) -> dict:
         user = await self.col.find_one({'id': int(id)})
-        return user if user else None
+        return user or None
 
 
 db = Database(Config.MONGODB_URI, "Rename-Bot")
