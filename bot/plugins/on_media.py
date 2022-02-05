@@ -11,7 +11,7 @@ from pyrogram import (
 )
 
 
-@Client.on_message((filters.video | filters.audio | filters.document) & ~filters.edited)
+@Client.on_message((filters.video | filters.audio | filters.document) & ~filters.channel & ~filters.edited)
 async def on_media_handler(c: Client, m: "types.Message"):
     if not m.from_user:
         return await m.reply_text("I don't know about you sar :(")
