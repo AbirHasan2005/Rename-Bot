@@ -3,6 +3,7 @@ This is a very simple Telegram Files Rename Bot by [@AbirHasan2005](https://t.me
 
 ## Features
 - Rename Videos, Documents or Audios without downloading the file.
+- Change video title, audio track title, subtitle track title.
 - Permanent Custom Thumbnail Support.
 - Very User-Friendly.
 - [MongoDB](https://mongodb.com) Based Database.
@@ -16,6 +17,7 @@ This is a very simple Telegram Files Rename Bot by [@AbirHasan2005](https://t.me
 start - Start Bot
 help - How to use this bot?
 rename - Rename file
+video_info - Change video metadata
 set_thumbnail - Set Custom Thumbnail
 show_thumbnail - Show Custom Thumbnail
 delete_thumbnail - Delete Custom Thumbnail
@@ -38,7 +40,7 @@ Press Below Button to Deploy!
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/AbirHasan2005/Rename-Bot)
 
 #### Thanks to [subinps](https://github.com/subinps) for helping
-#### Inspired from [@HK_Rename_Bot](https://t.me/HK_Rename_Bot)
+#### Inspired from [@HK_Rename_Bot](https://t.me/HK_Rename_Bot) & [@AHToolsBot](https://t.me/AHToolsBot)
 
 ### Follow on:
 <p align="left">

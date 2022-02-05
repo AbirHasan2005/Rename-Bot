@@ -54,15 +54,15 @@ class SendFloodedMessage:
 
         try:
             __SEND = await self.send_message(
-                chat_id,
-                text,
-                parse_mode,
-                entities,
-                disable_web_page_preview,
-                disable_notification,
-                reply_to_message_id,
-                schedule_date,
-                reply_markup
+                chat_id=chat_id,
+                text=text,
+                parse_mode=parse_mode,
+                entities=entities,
+                disable_web_page_preview=disable_web_page_preview,
+                disable_notification=disable_notification,
+                reply_to_message_id=reply_to_message_id,
+                schedule_date=schedule_date,
+                reply_markup=reply_markup
             )
             return __SEND
         except FloodWait as e:
