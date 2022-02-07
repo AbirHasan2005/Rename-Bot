@@ -13,6 +13,7 @@ from bot.core.file_info import (
     get_media_file_name
 )
 from bot.core.db.database import db
+from bot.core.utils.rm import rm_dir
 from bot.core.utils.executor import execute
 from bot.core.db.add import add_user_to_database
 from bot.core.display import progress_for_pyrogram
@@ -51,7 +52,7 @@ async def video_info_handler(c: Client, m: Message):
         await m.reply_text("This is not a Video!", True)
         return
     editable = await m.reply_text("Downloading Video ...", quote=True)
-    dl_loc = Config.DOWNLOAD_DIR + "/" + str(m.from_user.id) + "/"
+    dl_loc = Config.DOWNLOAD_DIR + "/" + str(m.from_user.id) + "/" + str(m.message_id) + "/"
     if not os.path.isdir(dl_loc):
         os.makedirs(dl_loc)
     c_time = time.time()
@@ -72,28 +73,37 @@ async def video_info_handler(c: Client, m: Message):
             os.remove(the_media)
         except Exception as error:
             print(f"Error: {error}")
-        await editable.edit("Can't fatch media info!")
+        await editable.edit("Can't fetch media info!")
         return
 
-    details = json.loads(output[0])
-    middle_cmd = f"ffmpeg -i '{the_media}' -c copy -map 0"
-    if title:
-        middle_cmd += f' -metadata title="{title}"'
-    for stream in details["streams"]:
-        if (stream["codec_type"] == "video") and video_title:
-            middle_cmd += f' -metadata:s:{stream["index"]} title="{video_title}"'
-        elif (stream["codec_type"] == "audio") and audio_title:
-            middle_cmd += f' -metadata:s:{stream["index"]} title="{audio_title}"'
-        elif (stream["codec_type"] == "subtitle") and subtitle_title:
-            middle_cmd += f' -metadata:s:{stream["index"]} title="{subtitle_title}"'
-    dl_loc = Config.DOWNLOAD_DIR + "/" + str(m.from_user.id) + "/" + str(m.message_id) + "/"
-    if not os.path.isdir(dl_loc):
-        os.makedirs(dl_loc)
-    middle_cmd += f" '{dl_loc}{new_file_name}'"
-    await editable.edit("Please Wait ...\n\nProcessing Video ...")
-    output = await execute(middle_cmd)
-    print(output, flush=True)
-    await editable.edit("Renamed Successfully!")
+    try:
+        details = json.loads(output[0])
+        middle_cmd = f"ffmpeg -i '{the_media}' -c copy -map 0"
+        if title:
+            middle_cmd += f' -metadata title="{title}"'
+        for stream in details["streams"]:
+            if (stream["codec_type"] == "video") and video_title:
+                middle_cmd += f' -metadata:s:{stream["index"]} title="{video_title}"'
+            elif (stream["codec_type"] == "audio") and audio_title:
+                middle_cmd += f' -metadata:s:{stream["index"]} title="{audio_title}"'
+            elif (stream["codec_type"] == "subtitle") and subtitle_title:
+                middle_cmd += f' -metadata:s:{stream["index"]} title="{subtitle_title}"'
+        dl_loc = Config.DOWNLOAD_DIR + "/" + \
+                 str(m.from_user.id) + "/" + \
+                 str(m.message_id) + "/" + \
+                 str(time.time()).replace(".", "") + "/"
+        if not os.path.isdir(dl_loc):
+            os.makedirs(dl_loc)
+        middle_cmd += f" '{dl_loc}{new_file_name}'"
+        await editable.edit("Please Wait ...\n\nProcessing Video ...")
+        output = await execute(middle_cmd)
+        print(output, flush=True)
+        await editable.edit("Renamed Successfully!")
+    except:
+        # Clean Up
+        await editable.edit("Failed to process video!")
+        await rm_dir(f"{Config.DOWNLOAD_DIR}/{m.from_user.id}/{m.message_id}/")
+        return
     try: os.remove(the_media)
     except: pass
     upload_as_doc = await db.get_upload_as_doc(m.from_user.id)
