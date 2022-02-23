@@ -3,6 +3,7 @@
 import os
 import time
 import json
+import shlex
 from bot.client import (
     Client
 )
@@ -67,7 +68,7 @@ async def video_info_handler(c: Client, m: Message):
         )
     )
     await editable.edit("Trying to Fetch Media Data ...")
-    output = await execute(f"ffprobe -hide_banner -show_streams -print_format json '{the_media}'")
+    output = await execute(f"ffprobe -hide_banner -show_streams -print_format json {shlex.quote(the_media)}")
     if not output:
         try:
             os.remove(the_media)
@@ -78,7 +79,7 @@ async def video_info_handler(c: Client, m: Message):
 
     try:
         details = json.loads(output[0])
-        middle_cmd = f"ffmpeg -i '{the_media}' -c copy -map 0"
+        middle_cmd = f"ffmpeg -i {shlex.quote(the_media)} -c copy -map 0"
         if title:
             middle_cmd += f' -metadata title="{title}"'
         for stream in details["streams"]:
@@ -94,7 +95,7 @@ async def video_info_handler(c: Client, m: Message):
                  str(time.time()).replace(".", "") + "/"
         if not os.path.isdir(dl_loc):
             os.makedirs(dl_loc)
-        middle_cmd += f" '{dl_loc}{new_file_name}'"
+        middle_cmd += f" {shlex.quote(dl_loc + new_file_name)}"
         await editable.edit("Please Wait ...\n\nProcessing Video ...")
         output = await execute(middle_cmd)
         print(output, flush=True)
