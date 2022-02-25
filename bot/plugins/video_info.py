@@ -54,6 +54,7 @@ async def video_info_handler(c: Client, m: Message):
         return
     editable = await m.reply_text("Downloading Video ...", quote=True)
     dl_loc = Config.DOWNLOAD_DIR + "/" + str(m.from_user.id) + "/" + str(m.message_id) + "/"
+    root_dl_loc = dl_loc
     if not os.path.isdir(dl_loc):
         os.makedirs(dl_loc)
     c_time = time.time()
@@ -67,15 +68,11 @@ async def video_info_handler(c: Client, m: Message):
             c_time
         )
     )
-    await editable.edit("Trying to Fetch Media Data ...")
+    await editable.edit("Trying to Fetch Media Metadata ...")
     output = await execute(f"ffprobe -hide_banner -show_streams -print_format json {shlex.quote(the_media)}")
     if not output:
-        try:
-            os.remove(the_media)
-        except Exception as error:
-            print(f"Error: {error}")
-        await editable.edit("Can't fetch media info!")
-        return
+        await rm_dir(root_dl_loc)
+        return await editable.edit("Can't fetch media info!")
 
     try:
         details = json.loads(output[0])
@@ -89,21 +86,17 @@ async def video_info_handler(c: Client, m: Message):
                 middle_cmd += f' -metadata:s:{stream["index"]} title="{audio_title}"'
             elif (stream["codec_type"] == "subtitle") and subtitle_title:
                 middle_cmd += f' -metadata:s:{stream["index"]} title="{subtitle_title}"'
-        dl_loc = Config.DOWNLOAD_DIR + "/" + \
-                 str(m.from_user.id) + "/" + \
-                 str(m.message_id) + "/" + \
-                 str(time.time()).replace(".", "") + "/"
+        dl_loc = dl_loc + str(time.time()).replace(".", "") + "/"
         if not os.path.isdir(dl_loc):
             os.makedirs(dl_loc)
         middle_cmd += f" {shlex.quote(dl_loc + new_file_name)}"
         await editable.edit("Please Wait ...\n\nProcessing Video ...")
-        output = await execute(middle_cmd)
-        print(output, flush=True)
+        await execute(middle_cmd)
         await editable.edit("Renamed Successfully!")
     except:
         # Clean Up
         await editable.edit("Failed to process video!")
-        await rm_dir(f"{Config.DOWNLOAD_DIR}/{m.from_user.id}/{m.message_id}/")
+        await rm_dir(root_dl_loc)
         return
     try: os.remove(the_media)
     except: pass
@@ -115,7 +108,7 @@ async def video_info_handler(c: Client, m: Message):
             if (_m_attr and _m_attr.thumbs) \
             else None
     if _default_thumb_:
-        _default_thumb_ = await c.download_media(_default_thumb_, f"{Config.DOWNLOAD_DIR}/{m.message_id}/{m.from_user.id}/")
+        _default_thumb_ = await c.download_media(_default_thumb_, root_dl_loc)
     if (not upload_as_doc) and m.reply_to_message.video:
         await c.upload_video(
             chat_id=m.chat.id,
@@ -123,7 +116,6 @@ async def video_info_handler(c: Client, m: Message):
             thumb=_default_thumb_ or None,
             editable_message=editable,
         )
-
     else:
         await c.upload_document(
             chat_id=m.chat.id,
@@ -131,9 +123,4 @@ async def video_info_handler(c: Client, m: Message):
             editable_message=editable,
             thumb=_default_thumb_ or None
         )
-
-    try:
-        os.remove(f"{dl_loc}{new_file_name}")
-        if _default_thumb_:
-            os.remove(_default_thumb_)
-    except: pass
+    await rm_dir(root_dl_loc)
