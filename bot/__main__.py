@@ -8,10 +8,6 @@ from pyrogram import idle
 from configs import Config
 from sqlite3 import OperationalError
 
-def run_bot():
-    bot.bot.start()
-    idle()
-
 
 def rm_st():
     try: shutil.rmtree(Config.DOWNLOAD_DIR)
@@ -22,12 +18,19 @@ def rm_st():
     except: pass
 
 
+def run_bot():
+    async def runner():
+        await bot.bot.start()
+        await idle()
+        await bot.bot.stop()
+
+    rm_st()
+    asyncio.get_event_loop().run_until_complete(runner())
+
+
 if __name__ == "__main__":
     try:
         run_bot()
-        bot.bot.stop()
     except OperationalError:
-        try: bot.bot.stop()
-        except: pass
         rm_st()
         os.execl(sys.executable, sys.executable, *sys.argv)
