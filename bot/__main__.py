@@ -4,6 +4,7 @@ import os
 import sys
 import bot
 import shutil
+import asyncio
 from pyrogram import idle
 from configs import Config
 from sqlite3 import OperationalError
