@@ -4,6 +4,7 @@ import os
 import time
 import json
 import shlex
+import shutil
 from bot.client import (
     Client
 )
@@ -21,9 +22,20 @@ from bot.core.display import progress_for_pyrogram
 from bot.core.file_info import get_file_attr
 
 
+def filesystem_free(path='.'):
+    _, __, free = shutil.disk_usage(".")
+    return free
+
+
 @Client.on_message(filters.command("video_info") & filters.private & ~filters.edited)
 async def video_info_handler(c: Client, m: Message):
     await add_user_to_database(c, m)
+    if filesystem_free() < 5000000000:
+        return await m.reply_text(
+            "Because of less server space I can't do this task right now !!\n\n"
+            "Please try again after some time or use @AHToolsBot to do same task.",
+            True
+        )
     if (not m.reply_to_message) or (len(m.command) == 1):
         await m.reply_text(f"Reply to video with,\n/{m.command[0]} `--change-title` new title `--change-video-title` new video title `--change-audio-title` new audio title `--change-subtitle-title` new subtitle title `--change-file-name` new file name", True)
         return
