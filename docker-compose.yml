@@ -1,4 +1,4 @@
-version: "Pyrogram"
+version: "0.20"
 services:
   worker:
     build: .
