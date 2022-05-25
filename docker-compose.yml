@@ -1,4 +1,4 @@
-version: "python3"
+version: "Pyrogram"
 services:
   worker:
     build: .
