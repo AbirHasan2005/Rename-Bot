@@ -1,6 +1,6 @@
-version: "version"
+version: version
 services:
-  worker:
+  worker: python3 -m bot
     build: .
     environment:
       API_HASH: $API_HASH
