@@ -1,4 +1,4 @@
-version: version
+version: "3"
 services:
   worker:
     build: .
