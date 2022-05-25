@@ -1,8 +1,1 @@
-version: "0.20"
-services:
-  worker:
-    build: .
-    environment:
-      API_HASH: $API_HASH
-      API_ID: $API_ID
-      BOT_TOKEN: $BOT_TOKEN
+
