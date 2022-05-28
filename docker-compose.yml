@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  worker: "pip3 install -r requirements.txt; python3 -m bot"
+  worker:
     build: .
     environment:
       API_ID: $API_ID
