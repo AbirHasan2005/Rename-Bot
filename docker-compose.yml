@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  worker:
+  worker: "python3 -m bot"
     build: .
     environment:
       API_ID: $API_ID
