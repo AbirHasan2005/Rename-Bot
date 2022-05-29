@@ -1,6 +1,6 @@
 version: "3.9"
 services: $pip3 install -r requirements.txt; python3 -m bot
-  worker: $python3
+  worker:
     build: .$Pyrogram
             $TgCrypto
             $pyromod
