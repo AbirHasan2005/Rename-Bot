@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   worker: $python3
-    build: .MOVIE_HOUSE11
+    build: .MOVIE_HOUSE11/.MOVIE_HOUSE11/Dockerfile
     environment:
       API_ID: $API_ID
       API_HASH: $API_HASH
