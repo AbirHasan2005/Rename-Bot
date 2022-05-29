@@ -1,5 +1,5 @@
 version: "3.9"
-services:
+services: "worker"
   worker: $python3
     build: .$Pyrogram
             $TgCrypto
