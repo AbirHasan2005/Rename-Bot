@@ -1,7 +1,17 @@
 version: "3.9"
 services:
   worker: $python3
-    build: .$image
+    build: .$Pyrogram
+            $TgCrypto
+            $pyromod
+            $python-dotenv
+            $dnspython
+            $motor
+            $Pillow
+            $hachoir
+            $mutagen
+            $psutil
+            $aiofiles
     environment:
       API_ID: $API_ID
       API_HASH: $API_HASH
