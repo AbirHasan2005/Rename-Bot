@@ -18,6 +18,6 @@ WORKDIR /Rename-Bot
 
 RUN pip3 install -U -r requirements.txt
 
-CMD python3 
+CMD python3 -m bot
 
 
